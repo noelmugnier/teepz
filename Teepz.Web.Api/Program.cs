@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using MediatR;
@@ -16,7 +15,13 @@ using Teeps.Web.Api.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("DataSource=file:memdb1?cache=shared"));
+{
+    #if DEBUG
+    options.UseSqlite("DataSource=file:memdb1?cache=shared");
+    #else
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    #endif
+});
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
