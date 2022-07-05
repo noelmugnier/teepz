@@ -16,11 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    #if DEBUG
-    options.UseSqlite("DataSource=file:memdb1?cache=shared");
-    #else
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    #endif
 });
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
